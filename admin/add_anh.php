@@ -33,7 +33,11 @@
                 $status=$_POST['status'];
                 if(empty($errors))
                 {
-                    if(($_FILES['img']['type']!="image/gif")
+                    if($_FILES['img']['size']==null)
+                        {
+                            $message="Bạn chưa chọn file ảnh. Vui lòng chọn file ảnh!";
+                        }
+                    elseif(($_FILES['img']['type']!="image/gif")
                          && ($_FILES['img']['type']!="image/png")
                          && ($_FILES['img']['type']!="image/jpeg")
                          && ($_FILES['img']['type']!="image/jpg"))
@@ -44,26 +48,23 @@
                         {
                             $message="Kích thước ảnh phải nhở hơn 1MB";
                         }
-                    elseif($_FILES['img']['size']=='')
-                        {
-                            $message="Bạn chưa chọn file ảnh";
-                        }
                     else
                         {
                             $img=$_FILES['img']['name'];   
                             $link_img='upload/'.$img;
                             move_uploaded_file($_FILES['img']['tmp_name'],"../upload/".$img);
-                        }                
-                    $query="INSERT INTO tblanh(title, anh, link, ordernum, status) VALUES('{$title}','{$link_img}', '{$link}', '$ordernum', '$status')";
-                    $KQ=mysqli_query($dbc, $query);
-                    kiemtra($KQ, $query);
-                    if(mysqli_affected_rows($dbc) == 1)
-                        echo "<p style='color: green'> Thêm mới thành công</p>";
-                    else 
-                        echo "<p style='color: red'>Thêm mới không thành công</p>";
-                    $_POST['title']='';
-                    $_POST['link']='';
-                    $_POST['ordernum']='';
+                                        
+                            $query="INSERT INTO tblanh(title, anh, link, ordernum, status) VALUES('{$title}','{$link_img}', '{$link}', $ordernum, $status)";
+                            $KQ=mysqli_query($dbc, $query);
+                            kiemtra($KQ, $query);
+                            if(mysqli_affected_rows($dbc) == 1)
+                                echo "<p style='color: green'> Thêm mới thành công</p>";
+                            else 
+                                echo "<p style='color: red'>Thêm mới không thành công</p>";
+                            $_POST['title']='';
+                            $_POST['link']='';
+                            $_POST['ordernum']='';
+                        }
                 }
                 else
                 {
@@ -94,17 +95,11 @@
             <div class="form-group">
                 <label>Link</label>
                 <input type="text" name="link" value="<?php if(isset($_POST['link'])) echo $_POST['link']; ?>" class="form-control" placeholder="Link ảnh" />
-                <?php 
-                    if(isset($errors) && in_array('link', $errors))
-                    {
-                        echo "<p class = 'required'>Bạn chưa nhập link. </p>";
-                    }
-                ?>
             </div>
             
             <div class="form-group">
                 <label>Thứ tự</label>
-                <input type="text" name="ordernum" value="<?php if(isset($_POST['link'])) echo $_POST['link']; ?>" class="form-control" placeholder="Thứ tự" />
+                <input type="text" name="ordernum" value="<?php if(isset($_POST['ordernum'])) echo $_POST['ordernum']; ?>" class="form-control" placeholder="Thứ tự" />
             </div>
             <div class="form-group">
                 <label style="display: block;">Trạng thái</label>
