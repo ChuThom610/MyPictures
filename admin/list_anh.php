@@ -23,7 +23,7 @@
                     $query="SELECT * FROM tblanh ORDER BY ordernum DESC";
                     $KQ=mysqli_query($dbc, $query); 
                     kiemtra($KQ, $query);
-                    while($anh = mysqli_fetch_array($KQ, MYSQLI_ASSOC));
+                    while($anh = mysqli_fetch_array($KQ, MYSQLI_ASSOC))
                     {
                     ?>
                     <tr>
